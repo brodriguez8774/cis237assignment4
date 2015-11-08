@@ -1,128 +1,124 @@
-﻿using System;
+﻿// Brandon Rodriguez
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment4
+namespace cis237assignment3
 {
-    //Class Droid Collection implements the IDroidCollection interface.
-    //All methods declared in the Interface must be implemented in this class 
-    class DroidCollection : IDroidCollection
+    class DroidCollection
     {
-        //Private variable to hold the collection of droids
+        #region Variables
+
         private IDroid[] droidCollection;
-        //Private variable to hold the length of the Collection
-        private int lengthOfCollection;
+        private IDroid[] tempArray;
 
-        //Constructor that takes in the size of the collection.
-        //It sets the size of the internal array that will be used.
-        //It also sets the length of the collection to zero since nothing is added yet.
-        public DroidCollection(int sizeOfCollection)
+        private int indexInt;
+        private int lenghtOfArrayInt;      // Total length of array, including null spots.
+        private int droidListSizeInt;      // Number of droids actually taking up spots in array.
+
+        #endregion
+
+
+
+        #region Constructor
+
+        /// <summary>
+        /// Base constructor.
+        /// </summary>
+        public DroidCollection()
         {
-            //Make new array for the collection
-            droidCollection = new IDroid[sizeOfCollection];
-            //set length of collection to 0
-            lengthOfCollection = 0;
+            droidListSizeInt = 0;
+            lenghtOfArrayInt = 10;
+            droidCollection = new Droid[lenghtOfArrayInt];
         }
 
-        //The Add method for a Protocol Droid. The parameters passed in match those needed for a protocol droid
-        public bool Add(string Material, string Model, string Color, int NumberOfLanguages)
+        #endregion
+
+
+
+        #region Properties
+
+        public int DroidListSize
         {
-            //If there is room to add the new droid
-            if (lengthOfCollection < (droidCollection.Length - 1))
-            {
-                //Add the new droid. Note that the droidCollection is of type IDroid, but the droid being stored is
-                //of type Protocol Droid. This is okay because of Polymorphism.
-                droidCollection[lengthOfCollection] = new ProtocolDroid(Material, Model, Color, NumberOfLanguages);
-                //Increase the length of the collection
-                lengthOfCollection++;
-                //return that it was successful
-                return true;
-            }
-            //Else, there is no room for the droid
-            else
-            {
-                //Return false
-                return false;
-            }
+            get { return droidListSizeInt; }
         }
 
-        //The Add method for a Utility droid. Code is the same as the above method except for the type of droid being created.
-        //The method can be redeclared as Add since it takes different parameters. This is called method overloading.
-        public bool Add(string Material, string Model, string Color, bool HasToolBox, bool HasComputerConnection, bool HasArm)
+        public IDroid[] DroidList
         {
-            if (lengthOfCollection < (droidCollection.Length - 1))
-            {
-                droidCollection[lengthOfCollection] = new UtilityDroid(Material, Model, Color, HasToolBox, HasComputerConnection, HasArm);
-                lengthOfCollection++;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            get { return droidCollection; }
         }
 
-        //The Add method for a Janitor droid. Code is the same as the above method except for the type of droid being created.
-        public bool Add(string Material, string Model, string Color, bool HasToolBox, bool HasComputerConnection, bool HasArm, bool HasTrashCompactor, bool HasVaccum)
-        {
-            if (lengthOfCollection < (droidCollection.Length - 1))
-            {
-                droidCollection[lengthOfCollection] = new JanitorDroid(Material, Model, Color, HasToolBox, HasComputerConnection, HasArm, HasTrashCompactor, HasVaccum);
-                lengthOfCollection++;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        #endregion
 
-        //The Add method for a Astromech droid. Code is the same as the above method except for the type of droid being created.
-        public bool Add(string Material, string Model, string Color, bool HasToolBox, bool HasComputerConnection, bool HasArm, bool HasFireExtinguisher, int NumberOfShips)
-        {
-            if (lengthOfCollection < (droidCollection.Length - 1))
-            {
-                droidCollection[lengthOfCollection] = new AstromechDroid(Material, Model, Color, HasToolBox, HasComputerConnection, HasArm, HasFireExtinguisher, NumberOfShips);
-                lengthOfCollection++;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
-        //The last method that must be implemented due to implementing the interface.
-        //This method iterates through the list of droids and creates a printable string that could
-        //be either printed to the screen, or sent to a file.
-        public string GetPrintString()
-        {
-            //Declare the return string
-            string returnString = "";
 
-            //For each droid in the droidCollection
-            foreach (IDroid droid in droidCollection)
+        #region Private Methods
+
+        /// <summary>
+        /// Expands array to be one and a half times current size.
+        /// </summary>
+        public void ExpandArray()
+        {
+            // Set list size to be one and a half times the size of current.
+            lenghtOfArrayInt = droidListSizeInt + (droidListSizeInt / 2);
+            tempArray = new Droid[lenghtOfArrayInt];
+
+            indexInt = 0;
+            // While not through entire list of droids yet.
+            while (indexInt < droidListSizeInt)
             {
-                //If the droid is not null (It might be since the array may not be full)
-                if (droid != null)
+                // If reached a null space, force exit of while loop.
+                if (droidCollection[indexInt] == null)
                 {
-                    //Calculate the total cost of the droid. Since we are using inheritance and Polymorphism
-                    //the program will automatically know which version of CalculateTotalCost it needs to call based
-                    //on which particular type it is looking at during the foreach loop.
-                    droid.CalculateTotalCost();
-                    //Create the string now that the total cost has been calculated
-                    returnString += "******************************" + Environment.NewLine;
-                    returnString += droid.ToString() + Environment.NewLine + Environment.NewLine;
-                    returnString += "Total Cost: " + droid.TotalCost.ToString("C") + Environment.NewLine;
-                    returnString += "******************************" + Environment.NewLine;
-                    returnString += Environment.NewLine;
+                    indexInt = droidListSizeInt;
                 }
+                else
+                {
+                    tempArray[indexInt] = droidCollection[indexInt];
+                    indexInt++;
+                }
+                droidCollection = tempArray;
             }
-
-            //return the completed string
-            return returnString;
         }
+
+        #endregion
+
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Adds a single droid to the current list.
+        /// </summary>
+        /// <param name="aDroid"></param>
+        public void AddDroid(IDroid aDroid)
+        {
+            // If there is room for more items in array.
+            if (droidListSizeInt < lenghtOfArrayInt)
+            {
+                indexInt = 0;
+
+                // While current spot is not empty;
+                while (droidCollection[indexInt] != null)
+                {
+                    indexInt++;
+                }
+
+                // Adds droid to first empty spot.
+                droidCollection[indexInt] = aDroid;
+                droidListSizeInt++;
+            }
+            else
+            {
+                ExpandArray();
+                AddDroid(aDroid);
+            }
+        }
+
+        #endregion
+
     }
 }

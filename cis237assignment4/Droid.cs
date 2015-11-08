@@ -1,70 +1,188 @@
-﻿using System;
+﻿// Brandon Rodriguez
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment4
+namespace cis237assignment3
 {
-    //Abstract class that implements the IDroid interface
+    /// <summary>
+    /// Abstract class for Droids. Handles "higher level" thinking/rules.
+    /// Derives from IDroid interface.
+    /// </summary>
     abstract class Droid : IDroid
     {
-        //some protected variables for the class
-        protected string material;
-        protected string model;
-        protected string color;
+        #region Variables
 
-        protected decimal baseCost;
-        protected decimal totalCost;
+        protected decimal baseCostDecimal;                  // Cost of droid before any extra features. IE, just the material, model, and color cost.
+        protected decimal totalCostDecimal;                 // Full cost of droid, including all extra features.
+        protected decimal costPerFeatureDecimal = 10;       // Standard cost per most features.
+        protected int numberOfItemsInt;                     // Number of individual items influencing droid price.
 
-        //The public property for TotalCost
+
+        // All the necessary variables for material selection.
+        protected string selectedMaterialString;
+        private decimal selectedMaterialDecimal;
+        public static string MATERIAL_1_STRING = "Tin";
+        public static string MATERIAL_2_STRING = "Steel";
+        public static string MATERIAL_3_STRING = "Titanium";
+        public static string MATERIAL_4_STRING = "Mythril";
+        public static string MATERIAL_5_STRING = "Unobtanium";
+
+        // All the necessary variables for model selection.
+        protected string selectedModelString;
+        protected decimal selectedModelDecimal;
+        public static string MODEL_1_STRING = "TI-84";
+        public static string MODEL_2_STRING = "CAT5";
+        public static string MODEL_3_STRING = "M7";
+
+        // All the necessary variables for color selection.
+        protected string selectedColorString;
+        private decimal selectedColorDecimal;
+        public static string COLOR_1_STRING = "White";
+        public static string COLOR_2_STRING = "Black";
+        public static string COLOR_3_STRING = "Blue";
+        public static string COLOR_4_STRING = "Red";
+        public static string COLOR_5_STRING = "Green";
+
+        #endregion
+
+
+
+        #region Constructor
+
+        /// <summary>
+        /// Base constructor.
+        /// </summary>
+        public Droid()
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="material"></param>
+        /// <param name="model"></param>
+        /// <param name="color"></param>
+        public Droid(string material, string model, string color)
+        {
+            Material = material;
+            Model = model;
+            Color = color;
+        }
+
+        #endregion
+
+
+
+        #region Properties
+
+        public string Material
+        {
+            set { selectedMaterialString = value; }
+            get { return selectedMaterialString; }
+        }
+
+        public string Model
+        {
+            set { selectedModelString = value; }
+            get { return selectedModelString; }
+        }
+
+        public string Color
+        {
+            set { selectedColorString = value; }
+            get { return selectedColorString; }
+        }
+
+        public decimal BaseCost
+        {
+            set { baseCostDecimal = value; }
+            get { return baseCostDecimal; }
+        }
+
         public decimal TotalCost
         {
-            get { return totalCost; }
-            set { totalCost = value; }
+            set { totalCostDecimal = value; }
+            get { return totalCostDecimal; }
         }
 
-        //Constructor that takes the main 3 parameters shared amongst all 4 types of droids
-        public Droid(string Material, string Model, string Color)
+        public int NumberOfItems
         {
-            this.material = Material;
-            this.model = Model;
-            this.color = Color;
+            get { return numberOfItemsInt; }
         }
 
-        //Virtual method that can be overridden in the derived classes if needed.
-        //This implementation calculates the cost based on the material used for the droid
-        protected virtual void CalculateBaseCost()
+        #endregion
+
+
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Creates string for droid type. Needed due to how inheritance works.
+        /// </summary>
+        /// <returns>String of droid's type.</returns>
+        protected abstract string TypeString();
+
+        #endregion
+
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Calculates total cost of droid.
+        /// </summary>
+        public virtual void CalculateTotalCost()
         {
-            switch (this.material)
-            {
-                case "Carbonite":
-                    this.baseCost = 100.00m;
-                    break;
-
-                case "Vanadium":
-                    this.baseCost = 120.00m;
-                    break;
-
-                case "Quadranium":
-                    this.baseCost = 150.00m;
-                    break;
-
-                default:
-                    this.baseCost = 50.00m;
-                    break;
-            }
+            totalCostDecimal = baseCostDecimal;
         }
 
-        //Abstract method that MUST be overriden in the derived class to calculate the total cost
-        public abstract void CalculateTotalCost();
-
-        //Overriden toString method that will return a string representing the basic information for any droid
-        public override string ToString()
+        /// <summary>
+        /// Determines the base cost of a droid. This is the cost of the droid minus any additional features.
+        /// IE, only the cost in regards to the model, material, and color.
+        /// </summary>
+        public void CalculateBaseCost()
         {
-            return "Material: " + this.material + Environment.NewLine +
-                    "Model: " + this.model + Environment.NewLine +
-                    "Color: " + this.color + Environment.NewLine;
+            baseCostDecimal = selectedModelDecimal + selectedMaterialDecimal + selectedColorDecimal;
         }
+
+        /// <summary>
+        /// Calculates individual feature costs of droid.
+        /// </summary>
+        public virtual void CalculateFeatures()
+        {
+            selectedModelDecimal = 10;
+            selectedMaterialDecimal = 10;
+            selectedColorDecimal = 10;
+
+            CalculateBaseCost();
+        }
+
+        /// <summary>
+        /// Shortened string for displaying of many droids, each in single line format.
+        /// </summary>
+        /// <returns>Single ine formatted for list of droids.</returns>
+        public virtual string DisplayShortToString()
+        {
+            return TypeString().PadRight(11) + (selectedMaterialString + " ").PadRight(11) + (selectedModelString + " ").PadRight(10) + (selectedColorString + " ").PadRight(10) + totalCostDecimal.ToString("C").PadLeft(10) + Environment.NewLine;
+        }
+
+        /// <summary>
+        /// Full string for displaying of single droid spanning multiple lines.
+        /// </summary>
+        /// <returns>Full information regarding single droid.</returns>
+        public virtual string DisplayLongToString()
+        {
+            return "".PadRight(5) + TypeString().PadRight(11) + (selectedMaterialString + " ").PadRight(11) + (selectedModelString + " ").PadRight(10) + selectedColorString.PadRight(10) + baseCostDecimal.ToString("C").PadLeft(10) + Environment.NewLine +
+                Environment.NewLine +
+                Environment.NewLine;
+        }
+
+        #endregion
+
     }
 }

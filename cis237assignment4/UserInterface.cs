@@ -1,338 +1,428 @@
-﻿using System;
+﻿// Brandon Rodriguez
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment4
+namespace cis237assignment3
 {
-    //Class to handle all of the User Interface operations
-    class UserInterface
+    /// <summary>
+    /// Handles all display to user and reading of user input.
+    /// Having one class handle everything UI helps create consistency.
+    /// 
+    /// Note: Having the interface methods accept parameters instead of directly calling static variables prevents the
+    /// interface from having to directly access multiple classes itself. Preferably, only RunProgram will access multiple classes
+    /// due to it being the "binding" between all the classes.
+    /// 
+    /// Instead, Interface just tells RunProgram what it needs to work and never deals directly with other classes.
+    /// </summary>
+    static class UserInterface
     {
-        //Create a class level variable for the droid collection
-        IDroidCollection droidCollection;
+        #region Variables
 
-        //Constructor that will take in a droid collection to use
-        public UserInterface(IDroidCollection DroidCollection)
+        private static string userInputString;
+        private static int previousListSizeInt;
+
+        #endregion
+
+
+
+        #region Constructor
+
+
+
+        #endregion
+
+
+
+        #region Properties
+
+
+
+        #endregion
+
+
+
+        #region Private Methods
+
+        /// <summary>
+        /// Sets cursor position for menus.
+        /// </summary>
+        private static void SetMenuCursor()
         {
-            this.droidCollection = DroidCollection;
+            Console.SetCursorPosition(0, 1);
         }
 
-        //Method to display the welcome message of the program
-        public void DisplayGreeting()
+        private static void ResetMenuDisplay()
         {
-            Console.WriteLine("Welcome to the Droid Inventory System");
-            Console.WriteLine();
+            // Section to remove everything currently displayed.
+            SetMenuCursor();
+            Console.WriteLine(
+                "".PadRight(Console.WindowWidth - 1) + Environment.NewLine +
+                "".PadRight(Console.WindowWidth - 1) + Environment.NewLine +
+                "".PadRight(Console.WindowWidth - 1) + Environment.NewLine +
+                "".PadRight(Console.WindowWidth - 1) + Environment.NewLine +
+                "".PadRight(Console.WindowWidth - 1) + Environment.NewLine +
+                "".PadRight(Console.WindowWidth - 1) + Environment.NewLine +
+                "".PadRight(Console.WindowWidth - 1) + Environment.NewLine);
+
+            // Section to add back "esc to go back" display section.
+            // Recreated each time incase a menu string at some point is too long and writes over it.
+            SetMenuCursor();
+            Console.WriteLine("Type 'esc' at any point to exit out. ".PadLeft(Console.WindowWidth - 1));
+
+            // Sets cursor for new menu to actually display.
+            SetMenuCursor();
         }
 
-        //Method to display the main menu
-        public void DisplayMainMenu()
+        private static void ResetDroidDisplay()
         {
-            Console.WriteLine("What would you like to do?");
-            Console.WriteLine("1. Add a new droid to the system");
-            Console.WriteLine("2. Print the list of droids out");
-            Console.WriteLine("3. Exit the program");
+
         }
 
-        //Method to get a menu choice
-        public int GetMenuChoice()
-        {
-            //Display prompt and get the input from the user
-            Console.Write("> ");
-            string choice = Console.ReadLine();
+        #endregion
 
-            //Set a variable for the menu choice to 0. Try to parse the input, if successful, return the menu choice.
-            int menuChoice = 0;
-            try
+
+
+        #region Public Methods
+
+        /// <summary>
+        /// Gets user input from console.
+        /// </summary>
+        /// <returns>String of user's input.</returns>
+        public static string GetUserInput()
+        {
+            Console.SetCursorPosition(1, 9);
+
+            userInputString = Console.ReadLine().Trim().ToLower();
+            
+            // Removing of user input after recieving it.
+            Console.SetCursorPosition(0, 9);
+            Console.WriteLine("".PadRight(Console.WindowWidth - 1));
+
+            return userInputString;
+        }
+
+        /// <summary>
+        /// Displays a line to console.
+        /// </summary>
+        /// <param name="displayString">String to display.</param>
+        public static void DisplayLine(string displayString)
+        {
+            ClearDisplayLine();
+            Console.WriteLine(displayString);
+        }
+
+        /// <summary>
+        /// Displays an error line to console.
+        /// </summary>
+        /// <param name="displayString">String of error to display.</param>
+        public static void DisplayError(string displayString)
+        {
+            ClearDisplayLine();
+
+            Console.SetCursorPosition(1, 8);
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(displayString.PadRight(Console.WindowWidth - 1));
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        /// <summary>
+        /// Clears display line from console.
+        /// </summary>
+        public static void ClearDisplayLine()
+        {
+            Console.SetCursorPosition(0, 8);
+            Console.WriteLine("".PadRight(Console.WindowWidth - 1));
+        }
+
+        /// <summary>
+        /// Struct to hold overbloated list of menus.
+        /// </summary>
+        public struct Menus
+        {
+            /// <summary>
+            /// Displays Main Menu to user.
+            /// </summary>
+            public static void DisplayMainMenu()
             {
-                menuChoice = Int32.Parse(choice);
-            }
-            catch (Exception e)
-            {
-                menuChoice = 0;
-            }
+                ResetMenuDisplay();
 
-            return menuChoice;
-        }
-
-        //Method to do the work of creating a new droid
-        public void CreateDroid()
-        {
-            //Prompt for color selection
-            this.displayColorSelection();
-            //Get the choice that the user makes
-            int choice = this.GetMenuChoice();
-
-            //If the choice is not valid, loop until it is valid, or the user cancels the operation
-            while(choice < 1 || choice > 4)
-            {
-                //Prompt for a valid choice
-                this.displayColorSelection();
-                choice = this.GetMenuChoice();
-            }
-
-            //Check the choice against the possibilities
-            //If there is one found, work on getting the next piece of information.
-            switch(choice)
-            {
-                case 1:
-                    this.chooseMaterial("Bronze");
-                    break;
-
-                case 2:
-                    this.chooseMaterial("Silver");
-                    break;
-
-                case 3:
-                    this.chooseMaterial("Gold");
-                    break;
-            }
-        }
-
-        //Method to print out the droid list
-        public void PrintDroidList()
-        {
-            Console.WriteLine();
-            Console.WriteLine(this.droidCollection.GetPrintString());
-        }
-
-        //Display the Model Selection
-        private void displayModelSelection()
-        {
-            Console.WriteLine();
-            Console.WriteLine("What type of droid is it?");
-            Console.WriteLine("1. Protocol");
-            Console.WriteLine("2. Utility");
-            Console.WriteLine("3. Janitorial");
-            Console.WriteLine("4. Astromech");
-            Console.WriteLine("5. Cancel This Operation");
-        }
-
-        //Display the Material Selection
-        private void displayMaterialSelection()
-        {
-            Console.WriteLine();
-            Console.WriteLine("What material is the droid made out of?");
-            Console.WriteLine("1. Carbonite");
-            Console.WriteLine("2. Vanadium");
-            Console.WriteLine("3. Quadranium");
-            Console.WriteLine("4. Cancel This Operation");
-        }
-
-        //Display the Color Selection
-        private void displayColorSelection()
-        {
-            Console.WriteLine();
-            Console.WriteLine("What color is the droid?");
-            Console.WriteLine("1. Bronze");
-            Console.WriteLine("2. Silver");
-            Console.WriteLine("3. Gold");
-            Console.WriteLine("4. Cancel This Operation");
-        }
-
-        //Display the Number of Languages Selection
-        private void displayNumberOfLanguageSelection()
-        {
-            Console.WriteLine();
-            Console.WriteLine("How many languages does the droid know?");
-        }
-
-        //Display and get the utility options
-        private bool[] displayAndGetUtilityOptions()
-        {
-            Console.WriteLine();
-            bool option1 = this.displayAndGetOption("Does the droid have a toolbox?");
-            Console.WriteLine();
-            bool option2 = this.displayAndGetOption("Does the droid have a computer connection?");
-            Console.WriteLine();
-            bool option3 = this.displayAndGetOption("Does the droid have an arm?");
-
-            bool[] returnArray = {option1, option2, option3};
-            return returnArray;
-        }
-
-        //Display and get the Janatorial options
-        private bool[] displayAndGetJanatorialOptions()
-        {
-            Console.WriteLine();
-            bool option1 = this.displayAndGetOption("Does the droid have a trash compactor?");
-            Console.WriteLine();
-            bool option2 = this.displayAndGetOption("Does the droid have a vaccum?");
-
-            bool[] returnArray = { option1, option2 };
-            return returnArray;
-        }
-
-        //Display and get the astromech options
-        private bool displayAndGetAstromechOption()
-        {
-            Console.WriteLine();
-            return this.displayAndGetOption("Does the droid have a fire extinguisher?");
-        }
-
-        //Display and get the number of ships
-        private int displayAndGetAstromechNumberOfShips()
-        {
-            Console.WriteLine();
-            Console.WriteLine("How many ships has the droid worked on?");
-            int choice = this.GetMenuChoice();
-
-            while (choice <= 0)
-            {
-                Console.WriteLine("Not a valid number of ships");
-                Console.WriteLine("How many ships as the droid worked on?");
-                choice = this.GetMenuChoice();
-            }
-            return choice;
-        }
-
-        //Method to display and get a general option
-        //It ensures that Y or N is the typed response
-        private bool displayAndGetOption(string optionString)
-        {
-            Console.WriteLine(optionString + " (y/n)");
-            string choice = Console.ReadLine();
-            while (choice.ToUpper() != "Y" && choice.ToUpper() != "N")
-            {
-                Console.WriteLine(optionString);
-                choice = Console.ReadLine();
-            }
-            if (choice.ToUpper() == "Y")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        //Method to choose the Material for the droid. It accepts Color as the parameter
-        private void chooseMaterial(string Color)
-        {
-            //Display the material selection
-            this.displayMaterialSelection();
-            //get the users choice
-            int choice = this.GetMenuChoice();
-
-            //while the chioce is not valid, wait until there is a valid one
-            while (choice < 0 || choice > 4)
-            {
-                this.displayMaterialSelection();
-                choice = this.GetMenuChoice();
+                Console.WriteLine(
+                    "   Select an option: " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) Purchase Droid" + Environment.NewLine +
+                    "   2) Display Full Reciept" + Environment.NewLine +
+                    "   3) Display Single Item" + Environment.NewLine +
+                    "   4) New Customer" + Environment.NewLine +
+                    "   5) Exit");
             }
 
-            //Check to see which choice was chosen. Call choose model and pass the color an material over
-            //to the method to get the model
-            switch(choice)
+            /// <summary>
+            /// Displays droid Type selection to user.
+            /// </summary>
+            public static void DisplayTypeSelectionMenu()
             {
-                case 1:
-                    this.chooseModel(Color, "Carbonite");
-                    break;
-                        
-                case 2:
-                    this.chooseModel(Color, "Vanadium");
-                    break;
+                ResetMenuDisplay();
 
-                case 3:
-                    this.chooseModel(Color, "Quadranium");
-                    break;
+                Console.WriteLine(
+                    "   Select a Droid Type: " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) Protocol Droid" + Environment.NewLine +
+                    "   2) Utility Droid" + Environment.NewLine +
+                    "   3) Janitor Droid" + Environment.NewLine +
+                    "   4) Astromech Droid" + Environment.NewLine);
+            }
 
+            /// <summary>
+            /// Displays droid Model selection to user.
+            /// </summary>
+            /// <param name="model1">Droid Model 1.</param>
+            /// <param name="model2">Droid Model 2.</param>
+            public static void DisplayModelSelectionMenu(string model1, string model2, string model3)
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Select a Droid Model: " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) " + model1 + Environment.NewLine +
+                    "   2) " + model2 + Environment.NewLine +
+                    "   3) " + model3 + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Material selection to user.
+            /// </summary>
+            /// <param name="material1">Droid Material 1.</param>
+            /// <param name="material2">Droid Material 2.</param>
+            /// <param name="material3">Droid Material 3.</param>
+            /// <param name="material4">Droid Material 4.</param>
+            /// <param name="material5">Droid Material 5.</param>
+            public static void DisplayMaterialSelectionMenu(string material1, string material2, string material3, string material4, string material5)
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Select a Droid Material: " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) " + material1 + Environment.NewLine +
+                    "   2) " + material2 + Environment.NewLine +
+                    "   3) " + material3 + Environment.NewLine +
+                    "   4) " + material4 + Environment.NewLine +
+                    "   5) " + material5 + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Color selection to user.
+            /// </summary>
+            /// <param name="color1">Droid Color 1.</param>
+            /// <param name="color2">Droid Color 2.</param>
+            /// <param name="color3">Droid Color 3.</param>
+            /// <param name="color4">Droid Color 4.</param>
+            /// <param name="color5">Droid Color 5.</param>
+            public static void DisplayColorSelectionMenu(string color1, string color2, string color3, string color4, string color5)
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Select a Droid Color: " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) " + color1 + Environment.NewLine +
+                    "   2) " + color2 + Environment.NewLine +
+                    "   3) " + color3 + Environment.NewLine +
+                    "   4) " + color4 + Environment.NewLine +
+                    "   5) " + color5 + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Language selection to user.
+            /// </summary>
+            /// <param name="langSelection1">Droid Language 1.</param>
+            /// <param name="langSelection2">Droid Language 2.</param>
+            /// <param name="langSelection3">Droid Language 3.</param>
+            /// <param name="langSelection4">Droid Language 4.</param>
+            public static void DisplayLanguageSelectionMenu(int langSelection1, int langSelection2, int langSelection3, int langSelection4)
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Select number of Built in Languages: " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) " + langSelection1 + Environment.NewLine +
+                    "   2) " + langSelection2 + Environment.NewLine +
+                    "   3) " + langSelection3 + Environment.NewLine +
+                    "   4) " + langSelection4 + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Tool Box selection to user.
+            /// </summary>
+            public static void DisplayToolBoxSelectionMenu()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Add Toolbox Functionality? " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) Yes" + Environment.NewLine +
+                    "   2) No" +Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Computer Connection selection to user.
+            /// </summary>
+            public static void DisplayComputerConnectionSelectionMenu()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Add Network Functionality? " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) Yes" + Environment.NewLine +
+                    "   2) No" + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Arm selection to user.
+            /// </summary>
+            public static void DisplayArmSelectionMenu()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Add Mechanical Arm Functionality? " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) Yes" + Environment.NewLine +
+                    "   2) No" + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Color selection to user.
+            /// </summary>
+            public static void DisplayTrashCompactorSelectionMenu()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Add Trash Compactor Functionality? " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) Yes" + Environment.NewLine +
+                    "   2) No" + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Vacuum selection to user.
+            /// </summary>
+            public static void DisplayVacuumSelectionMenu()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Add Vacuum Functionality? " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) Yes" + Environment.NewLine +
+                    "   2) No" + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Fire Extinguisher selection to user.
+            /// </summary>
+            public static void DisplayFireExtinguisherSelectionMenu()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Add built in Fire Extinguisher? " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   1) Yes" + Environment.NewLine +
+                    "   2) No" + Environment.NewLine);
+            }
+
+            /// <summary>
+            /// Displays droid Ship-outfitting Number selection to user.
+            /// </summary>
+            public static void DisplayNumberOfShipsSelectionMenu()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "   Program for how many ship types? " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   Note: We can only program up to 9 ship types.");
+            }
+
+            public static void DisplaySingleDroidSelectionMenu()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine("   Input Droid Number: " + Environment.NewLine +
+                    "" + Environment.NewLine +
+                    "   If needed, droid numbers can be viewed on the reciept." + Environment.NewLine);
             }
         }
 
-        //Method to choose a model and decide what other input is needed based on the selected model
-        private void chooseModel(string Color, string Material)
+
+        /// <summary>
+        /// Displays list of droids to console.
+        /// </summary>
+        /// <param name="displayString">String of droids to display.</param>
+        /// <param name="currentListSize">Current size of droid list.</param>
+        public static void DisplayList(string displayString, int currentListSize)
         {
-            //Display the menu to choose which model
-            this.displayModelSelection();
-            //Get the model choice
-            int choice = this.GetMenuChoice();
+            ClearList();
+            previousListSizeInt = currentListSize;
 
-            //While the choice is not valid, keep prompting for a choice
-            while (choice < 0 || choice > 5)
-            {
-                //Display the menu again, and ask for the option again.
-                this.displayModelSelection();
-                choice = this.GetMenuChoice();
-            }
+            Console.SetCursorPosition(0, 10);
 
-            //Based on the choice, call the next set of crieteria that needs to be determined
-            switch (choice)
-            {
-                case 1:
-                    this.chooseNumberOfLanguages(Color, Material, "Protocol");
-                    break;
+            Console.WriteLine(" ".PadRight(5) + "Type".PadRight(11) + "Material".PadRight(11) + "Model".PadRight(10) + "Color".PadRight(10) + "Total Cost".PadLeft(10) + Environment.NewLine);
 
-                case 2:
-                    this.chooseOptions(Color, Material, "Utility");
-                    break;
-
-                case 3:
-                    this.chooseOptions(Color, Material, "Janatorial");
-                    break;
-
-                case 4:
-                    this.chooseOptions(Color, Material, "Astromech");
-                    break;
-            }
+            Console.WriteLine(displayString);
         }
 
-        //Method to choose the number of langages that a droid knows. It accepts the values that were determined
-        //in the past methods. This method will also add a droid based on the collected information.
-        private void chooseNumberOfLanguages(string Color, string Material, string Model)
+        /// <summary>
+        /// Clears currently displayed list of androids.
+        /// </summary>
+        public static void ClearList()
         {
-            //Display the number of languages selection
-            this.displayNumberOfLanguageSelection();
-            //Get the users choice
-            int choice = this.GetMenuChoice();
-
-            //While the choice is not valid, keep prompting for a valid one.
-            while (choice < 0)
+            // Clear lines equal to size of last displayed droid list.
+            Console.SetCursorPosition(0, 10);
+            int index = 0;
+            while (index < previousListSizeInt + 5)
             {
-                Console.WriteLine("Not a valid number of languages");
-                this.displayNumberOfLanguageSelection();
-                choice = this.GetMenuChoice();
+                Console.WriteLine("".PadRight(Console.WindowWidth - 1));
+                index++;
             }
-
-            //The only droid that we can add with this criteria is a protocol droid, so add it to the droid collection
-            this.droidCollection.Add(Material, Model, Color, choice);
 
         }
 
-        //Method to figure out which of the utility droids the user is creating, and then work on collecting the rest
-        //of the needed information to create the droid.
-        private void chooseOptions(string Color, string Material, string Model)
+        /// <summary>
+        /// Displays list of droids to console.
+        /// </summary>
+        /// <param name="displayString">String of droids to display.</param>
+        /// <param name="currentListSize">Number of items which effect droid's price.</param>
+        public static void DisplaySingleDroidInfo(string displayString, int numberOfItemsForDroid, decimal totalCost)
         {
-            //Display and get the utility options.
-            bool[] standardOptions = this.displayAndGetUtilityOptions();
+            ClearList();
+            previousListSizeInt = numberOfItemsForDroid;
 
-            //Based on the model chosen, figure out the remaining information needed.
-            switch(Model)
-            {
-                //If it is a utility
-                case "Utility":
-                    this.droidCollection.Add(Material, Model, Color, standardOptions[0], standardOptions[1], standardOptions[2]);
-                    break;
+            Console.SetCursorPosition(0, 10);
 
-                //If it is a Janatorial
-                case "Janatorial":
-                    //Get the rest of the options for a Janatorial droid.
-                    bool[] janatorialOptions = this.displayAndGetJanatorialOptions();
-                    //Add it to the collection
-                    this.droidCollection.Add(Material, Model, Color, standardOptions[0], standardOptions[1], standardOptions[2], janatorialOptions[0], janatorialOptions[1]);
-                    break;
+            Console.WriteLine(" ".PadRight(5) + "Type".PadRight(11) + "Material".PadRight(11) + "Model".PadRight(10) + "Color".PadRight(10) + "Base Cost".PadLeft(10) + Environment.NewLine +
+                Environment.NewLine +
+                Environment.NewLine +
+                "".PadRight(5) + "Feature".PadRight(25) + "Selection".PadRight(17) + "Cost".PadLeft(10));
 
-                //If it is a Astromech
-                case "Astromech":
-                    //Get the rest of the options for an astromech
-                    bool astromechOption = this.displayAndGetAstromechOption();
-                    int astromechNumberOfShips = this.displayAndGetAstromechNumberOfShips();
-                    //Add it to the collection
-                    this.droidCollection.Add(Material, Model, Color, standardOptions[0], standardOptions[1], standardOptions[2], astromechOption, astromechNumberOfShips);
-                    break;
-            }
+            Console.SetCursorPosition(0, 11);
+            Console.WriteLine(displayString);
+
+            Console.WriteLine("".PadRight(5) + "Total Droid Cost: ".PadRight(25) + totalCost.ToString("C").PadLeft(15));
         }
+
+        #endregion
 
     }
 }
