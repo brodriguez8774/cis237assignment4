@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment3
+namespace cis237assignment4
 {
     /// <summary>
     /// Handles all display to user and reading of user input.
@@ -158,7 +158,19 @@ namespace cis237assignment3
                     "   2) Display Full Reciept" + Environment.NewLine +
                     "   3) Display Single Item" + Environment.NewLine +
                     "   4) New Customer" + Environment.NewLine +
-                    "   5) Exit");
+                    "   5) Sort Stuff" + Environment.NewLine +
+                    "   6) Exit");
+            }
+
+            public static void DisplaySorting()
+            {
+                ResetMenuDisplay();
+
+                Console.WriteLine(
+                    "  Sorting type:" + Environment.NewLine +
+                    "  1) Sort by Type (Bucket Sort)" +
+                    "  2) Sort by Cost (Merged Sort)"
+                    );
             }
 
             /// <summary>

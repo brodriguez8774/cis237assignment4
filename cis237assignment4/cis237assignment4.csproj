@@ -47,7 +47,10 @@
     <Compile Include="Droid_Janitor.cs" />
     <Compile Include="Droid_Protocol.cs" />
     <Compile Include="Droid_Utility.cs" />
+    <Compile Include="GenericLinkedList.cs" />
+    <Compile Include="GenericNode.cs" />
     <Compile Include="IDroid.cs" />
+    <Compile Include="MergedSort.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunProgram.cs" />

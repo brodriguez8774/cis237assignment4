@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment3
+namespace cis237assignment4
 {
     /// <summary>
     /// Class for Droids of type Utility.
@@ -54,6 +54,7 @@ namespace cis237assignment3
             HasComputerConnection = hasComputerConnection;
             HasArm = hasArm;
             numberOfItemsInt = 6;
+            droidTypeString = "Utility";
         }
 
         #endregion

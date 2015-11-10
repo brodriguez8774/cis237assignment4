@@ -1,9 +1,8 @@
 # Assignment 4 - Interfaces, Stacks, Queues, Generics, and Merge Sort. Project uses Assignment 3 solution.
-## Due: 11-10-2015
 
 ## Author
 
-
+Brandon Rodriguez
 
 ## Description
 
@@ -67,11 +66,12 @@ Be sure to think about what the time complexity for the bucket sort will be. Thi
 
 ## Outside Resources Used
 
-
+https://msdn.microsoft.com/en-us/library/y2ky8xsk%28v=vs.110%29.aspx
+* Figured out exactly how the base CompareTo method works.
 
 ## Known Problems, Issues, And/Or Errors in the Program
 
-
+Appears to be functioning corerctly? ...maybe?
 
 ## Assignment 3 Description for reference
 

@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment3
+namespace cis237assignment4
 {
     /// <summary>
     /// Interface for all droid objects.
     /// Acts as a "universal blueprint/contract" of sorts.
     /// </summary>
-    interface IDroid
+    interface IDroid : IComparable
     {
         /// <summary>
         /// Calculates total cost of droid.

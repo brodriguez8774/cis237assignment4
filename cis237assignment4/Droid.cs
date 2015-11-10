@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment3
+namespace cis237assignment4
 {
     /// <summary>
     /// Abstract class for Droids. Handles "higher level" thinking/rules.
@@ -20,7 +20,7 @@ namespace cis237assignment3
         protected decimal totalCostDecimal;                 // Full cost of droid, including all extra features.
         protected decimal costPerFeatureDecimal = 10;       // Standard cost per most features.
         protected int numberOfItemsInt;                     // Number of individual items influencing droid price.
-
+        public string droidTypeString;
 
         // All the necessary variables for material selection.
         protected string selectedMaterialString;
@@ -155,9 +155,9 @@ namespace cis237assignment3
         /// </summary>
         public virtual void CalculateFeatures()
         {
-            selectedModelDecimal = 10;
-            selectedMaterialDecimal = 10;
-            selectedColorDecimal = 10;
+            selectedModelDecimal = costPerFeatureDecimal * 10;
+            selectedMaterialDecimal = costPerFeatureDecimal * 5;
+            selectedColorDecimal = costPerFeatureDecimal * 1;
 
             CalculateBaseCost();
         }
@@ -182,7 +182,22 @@ namespace cis237assignment3
                 Environment.NewLine;
         }
 
+        /// <summary>
+        /// Impliments CompareTo with droids, using the totalCost property.
+        /// </summary>
+        /// <param name="obj">Object to compare.</param>
+        /// <returns>Returns less than 0, 0, or greater than 0.</returns>
+        public int CompareTo(object obj)
+        {
+            Droid passedDroid = (Droid)obj;
+            decimal thisTotalCost = this.totalCostDecimal;
+            decimal passedTotalCost = passedDroid.totalCostDecimal;
+            return thisTotalCost.CompareTo(passedTotalCost);
+        }
+
         #endregion
 
+
+        
     }
 }

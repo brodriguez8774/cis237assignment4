@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment3
+namespace cis237assignment4
 {
     class DroidCollection
     {
@@ -80,8 +80,8 @@ namespace cis237assignment3
                     tempArray[indexInt] = droidCollection[indexInt];
                     indexInt++;
                 }
-                droidCollection = tempArray;
             }
+            droidCollection = tempArray;
         }
 
         #endregion
@@ -116,6 +116,94 @@ namespace cis237assignment3
                 ExpandArray();
                 AddDroid(aDroid);
             }
+        }
+
+        /// <summary>
+        /// Attempt at bucket sort.
+        /// </summary>
+        public void SortBucket()
+        {
+            GenericLinkedList<IDroid> Protocol_Stack = new GenericLinkedList<IDroid>();
+            GenericLinkedList<IDroid> Utility_Stack = new GenericLinkedList<IDroid>();
+            GenericLinkedList<IDroid> Janitor_Stack = new GenericLinkedList<IDroid>();
+            GenericLinkedList<IDroid> Astromech_Stack = new GenericLinkedList<IDroid>();
+
+            GenericLinkedList<IDroid> Droid_Queue = new GenericLinkedList<IDroid>();
+
+            indexInt = 0;
+            while (indexInt < droidListSizeInt)
+            {
+                switch (((Droid)droidCollection[indexInt]).droidTypeString)
+                {
+                    case "Protocol":
+                        Protocol_Stack.Add(droidCollection[indexInt]);
+                        break;
+                    case "Utility":
+                        Utility_Stack.Add(droidCollection[indexInt]);
+                        break;
+                    case "Janitor":
+                        Janitor_Stack.Add(droidCollection[indexInt]);
+                        break;
+                    case "Astromech":
+                        Astromech_Stack.Add(droidCollection[indexInt]);
+                        break;
+                }
+                indexInt++;
+            }
+
+            // Technically not needed, but added to be able to see that the list is empty before being popped off the queue. For debugging purposes. Remove in final version.
+            indexInt = 0;
+            while (indexInt < droidListSizeInt)
+            {
+                droidCollection[indexInt] = null;
+                indexInt++;
+            }
+
+
+            // Take droids off stacks.
+            while (Astromech_Stack.HeadNode != null)
+            {
+                Droid_Queue.Add(Astromech_Stack.HeadNode.Data);
+                Astromech_Stack.Delete(1);
+            }
+
+            while (Janitor_Stack.HeadNode != null)
+            {
+                Droid_Queue.Add(Janitor_Stack.HeadNode.Data);
+                Janitor_Stack.Delete(1);
+            }
+
+            while (Utility_Stack.HeadNode != null)
+            {
+                Droid_Queue.Add(Utility_Stack.HeadNode.Data);
+                Utility_Stack.Delete(1);
+            }
+
+            while (Protocol_Stack.HeadNode != null)
+            {
+                Droid_Queue.Add(Protocol_Stack.HeadNode.Data);
+                Protocol_Stack.Delete(1);
+            }
+
+            
+            // Pop off queue and back into array.
+            // Probably currently works as a stack. Likely in reversed order right now. Fix later.
+            indexInt = 0;
+            while (Droid_Queue.HeadNode != null) 
+            {
+                droidCollection[indexInt] = Droid_Queue.HeadNode.Data;
+                Droid_Queue.Delete(1);
+                indexInt++;
+            }
+
+        }
+
+        /// <summary>
+        /// Attempt at merged sort.
+        /// </summary>
+        public void SortMergedSort()
+        {
+            MergedSort.Sort(droidCollection, droidListSizeInt);
         }
 
         #endregion

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment3
+namespace cis237assignment4
 {
     /// <summary>
     /// Handles main operations of program.
@@ -71,6 +71,7 @@ namespace cis237assignment3
         private void Run()
         {
             ResetList();
+            AddTestingDroids();
             while (runProgram)
             {
                 // Resets/initializes menu bool to allow user to stay in menus.
@@ -80,6 +81,92 @@ namespace cis237assignment3
                 userInputString = UserInterface.GetUserInput();
                 MainMenuSelection();
             }
+        }
+
+        /// <summary>
+        /// Force create a bunch of droids on start for testing. Purposely in random order, both in DROID_TYPE and cost.
+        /// </summary>
+        private void AddTestingDroids()
+        {
+            droidCollection.AddDroid(new Droid_Astromech("Tin", "TI-84", "White", true, false, true, false, 1));
+            droidCollection.DroidList[0].CalculateFeatures();
+            droidCollection.DroidList[0].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Astromech("Steel", "CAT5", "Black", false, true, false, true, 3));
+            droidCollection.DroidList[1].CalculateFeatures();
+            droidCollection.DroidList[1].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Protocol("Tin", "TI-84", "White", 1));
+            droidCollection.DroidList[2].CalculateFeatures();
+            droidCollection.DroidList[2].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Protocol("Steel", "CAT5", "Black", 3));
+            droidCollection.DroidList[3].CalculateFeatures();
+            droidCollection.DroidList[3].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Protocol("Titanium", "M7", "Blue", 7));
+            droidCollection.DroidList[4].CalculateFeatures();
+            droidCollection.DroidList[4].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Janitor("Tin", "TI-84", "White", true, false, true, false, true));
+            droidCollection.DroidList[5].CalculateFeatures();
+            droidCollection.DroidList[5].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Janitor("Steel", "CAT5", "Black", false, true, false, true, false));
+            droidCollection.DroidList[6].CalculateFeatures();
+            droidCollection.DroidList[6].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Utility("Unobtanium", "M7", "Green", true, false, true));
+            droidCollection.DroidList[7].CalculateFeatures();
+            droidCollection.DroidList[7].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Janitor("Titanium", "M7", "Blue", true, true, true, true, true));
+            droidCollection.DroidList[8].CalculateFeatures();
+            droidCollection.DroidList[8].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Protocol("Mythril", "TI-84", "Red", 15));
+            droidCollection.DroidList[9].CalculateFeatures();
+            droidCollection.DroidList[9].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Protocol("Unobtanium", "M7", "Green", 1));
+            droidCollection.DroidList[10].CalculateFeatures();
+            droidCollection.DroidList[10].CalculateTotalCost();
+            
+            droidCollection.AddDroid(new Droid_Utility("Tin", "TI-84", "White", true, false, true));
+            droidCollection.DroidList[11].CalculateFeatures();
+            droidCollection.DroidList[11].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Utility("Steel", "CAT5", "Black", false, true, false));
+            droidCollection.DroidList[12].CalculateFeatures();
+            droidCollection.DroidList[12].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Astromech("Mythril", "TI-84", "Red", false, false, false, false, 7));
+            droidCollection.DroidList[13].CalculateFeatures();
+            droidCollection.DroidList[13].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Astromech("Unobtanium", "M7", "Green", true, false, true, false, 9));
+            droidCollection.DroidList[14].CalculateFeatures();
+            droidCollection.DroidList[14].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Utility("Titanium", "M7", "Blue", true, true, true));
+            droidCollection.DroidList[15].CalculateFeatures();
+            droidCollection.DroidList[15].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Utility("Mythril", "TI-84", "Red", false, false, false));
+            droidCollection.DroidList[16].CalculateFeatures();
+            droidCollection.DroidList[16].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Janitor("Mythril", "TI-84", "Red", false, false, false, false, false));
+            droidCollection.DroidList[17].CalculateFeatures();
+            droidCollection.DroidList[17].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Janitor("Unobtanium", "M7", "Green", true, false, true, false, true));
+            droidCollection.DroidList[18].CalculateFeatures();
+            droidCollection.DroidList[18].CalculateTotalCost();
+
+            droidCollection.AddDroid(new Droid_Astromech("Titanium", "M7", "Blue", true, true, true, true, 5));
+            droidCollection.DroidList[19].CalculateFeatures();
+            droidCollection.DroidList[19].CalculateTotalCost();
         }
 
         /// <summary>
@@ -102,6 +189,9 @@ namespace cis237assignment3
                     ResetList();
                     break;
                 case "5":
+                    SortList();
+                    break;
+                case "6":
                     Exit();
                     break;
                 case "esc":
@@ -109,6 +199,23 @@ namespace cis237assignment3
                     break;
                 default:
                     UserInterface.DisplayError("Invalid selection.");
+                    break;
+            }
+        }
+
+        private void SortList()
+        {
+            UserInterface.Menus.DisplaySorting();
+            userInputString = UserInterface.GetUserInput();
+            switch (userInputString)
+            {
+                case "1":
+                    droidCollection.SortBucket();
+                    break;
+                case "2":
+                    droidCollection.SortMergedSort();
+                    break;
+                case "esc":
                     break;
             }
         }

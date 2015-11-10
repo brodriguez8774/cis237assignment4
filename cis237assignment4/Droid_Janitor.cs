@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment3
+namespace cis237assignment4
 {
     /// <summary>
     /// Class for Droids of type Janitor.
@@ -53,6 +53,7 @@ namespace cis237assignment3
             HasTrashCompactor = hasTrashCompactor;
             HasVacuum = hasVacuum;
             numberOfItemsInt = 8;
+            droidTypeString = "Janitor";
         }
 
         #endregion

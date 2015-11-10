@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cis237assignment3
+namespace cis237assignment4
 {
     /// <summary>
     /// Class for Droids of type Protocol.
@@ -52,6 +52,7 @@ namespace cis237assignment3
         {
             NumberOfLanguages = numberOfLanguages;
             numberOfItemsInt = 4;
+            droidTypeString = "Protocol";
         }
 
         #endregion
