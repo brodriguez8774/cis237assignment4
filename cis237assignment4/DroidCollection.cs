@@ -119,39 +119,42 @@ namespace cis237assignment4
         }
 
         /// <summary>
-        /// Attempt at bucket sort.
+        /// Modified bucket sort.
         /// </summary>
         public void SortBucket()
         {
+            // Create stacks for each droid type.
             GenericLinkedList<IDroid> Protocol_Stack = new GenericLinkedList<IDroid>();
             GenericLinkedList<IDroid> Utility_Stack = new GenericLinkedList<IDroid>();
             GenericLinkedList<IDroid> Janitor_Stack = new GenericLinkedList<IDroid>();
             GenericLinkedList<IDroid> Astromech_Stack = new GenericLinkedList<IDroid>();
-
+            // Create single queue for droids.
             GenericLinkedList<IDroid> Droid_Queue = new GenericLinkedList<IDroid>();
 
+            // Go through entire current collection and add droids to appropriate spots.
             indexInt = 0;
             while (indexInt < droidListSizeInt)
             {
                 switch (((Droid)droidCollection[indexInt]).droidTypeString)
                 {
                     case "Protocol":
-                        Protocol_Stack.Add(droidCollection[indexInt]);
+                        Protocol_Stack.Push(droidCollection[indexInt]);
                         break;
                     case "Utility":
-                        Utility_Stack.Add(droidCollection[indexInt]);
+                        Utility_Stack.Push(droidCollection[indexInt]);
                         break;
                     case "Janitor":
-                        Janitor_Stack.Add(droidCollection[indexInt]);
+                        Janitor_Stack.Push(droidCollection[indexInt]);
                         break;
                     case "Astromech":
-                        Astromech_Stack.Add(droidCollection[indexInt]);
+                        Astromech_Stack.Push(droidCollection[indexInt]);
                         break;
                 }
                 indexInt++;
             }
 
-            // Technically not needed, but added to be able to see that the list is empty before being popped off the queue. For debugging purposes. Remove in final version.
+            // Technically not needed, but added to be able to see that the list is empty before being popped off the queue. For debugging purposes.
+            //Remove in final version.
             indexInt = 0;
             while (indexInt < droidListSizeInt)
             {
@@ -160,46 +163,45 @@ namespace cis237assignment4
             }
 
 
-            // Take droids off stacks.
+            // Take droids off stacks and put into queue.
             while (Astromech_Stack.HeadNode != null)
             {
-                Droid_Queue.Add(Astromech_Stack.HeadNode.Data);
-                Astromech_Stack.Delete(1);
+                Droid_Queue.Enqueue(Astromech_Stack.HeadNode.Data);
+                Astromech_Stack.Pop();
             }
 
             while (Janitor_Stack.HeadNode != null)
             {
-                Droid_Queue.Add(Janitor_Stack.HeadNode.Data);
-                Janitor_Stack.Delete(1);
+                Droid_Queue.Enqueue(Janitor_Stack.HeadNode.Data);
+                Janitor_Stack.Pop();
             }
 
             while (Utility_Stack.HeadNode != null)
             {
-                Droid_Queue.Add(Utility_Stack.HeadNode.Data);
-                Utility_Stack.Delete(1);
+                Droid_Queue.Enqueue(Utility_Stack.HeadNode.Data);
+                Utility_Stack.Pop();
             }
 
             while (Protocol_Stack.HeadNode != null)
             {
-                Droid_Queue.Add(Protocol_Stack.HeadNode.Data);
-                Protocol_Stack.Delete(1);
+                Droid_Queue.Enqueue(Protocol_Stack.HeadNode.Data);
+                Protocol_Stack.Pop();
             }
 
             
-            // Pop off queue and back into array.
-            // Probably currently works as a stack. Likely in reversed order right now. Fix later.
+            // Take droids out of queue and back into array.
             indexInt = 0;
             while (Droid_Queue.HeadNode != null) 
             {
                 droidCollection[indexInt] = Droid_Queue.HeadNode.Data;
-                Droid_Queue.Delete(1);
+                Droid_Queue.DeQueue();
                 indexInt++;
             }
 
         }
 
         /// <summary>
-        /// Attempt at merged sort.
+        /// Merged sort.
         /// </summary>
         public void SortMergedSort()
         {

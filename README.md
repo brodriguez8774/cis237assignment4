@@ -71,7 +71,7 @@ https://msdn.microsoft.com/en-us/library/y2ky8xsk%28v=vs.110%29.aspx
 
 ## Known Problems, Issues, And/Or Errors in the Program
 
-Appears to be functioning corerctly? ...maybe?
+None that I see.
 
 ## Assignment 3 Description for reference
 
